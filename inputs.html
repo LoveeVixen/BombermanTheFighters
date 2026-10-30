@@ -1,0 +1,189 @@
+<!-- LOVEEVIXEN -->
+<html>
+    <title>Bomberman the Fighters</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- TITLE AND COPYRIGHT NOTE -->
+    <div class="center"><img src="WebsiteContents/title_1.png" width="600" alt="Game title: Bomberman the Fighters.">
+    <p class="note">This is a free/non-profit fan-game. Bomberman is &copy; Konami. Please support official releases.</p></div>
+    </br>
+
+    <!-- NAVIGATION BAR -->
+    <div class="navigationBar">
+        <a href="index.html">Home</a> | <a href="inputs.html">Inputs Guide</a> | <a href="devlog.html">Devlog</a>
+    </div>
+
+    <div class="center">
+        <div class="inputGuideBox">
+            <h3>This page will be more polished as the game gets closer to release.</h3>
+
+            <u>Player 1 Keyboard Controls</u>
+            <p>Move: WASD</p>
+            <p>Attack Zero: J</p>
+            <p>Attack One: K</p>
+            <p>Attack Two: U</p>
+            <p>Attack Three: I</p>
+            <p>Start: Enter</p>
+
+            <u>Player 2 Keyboard Controls</u>
+            <p>Move: Arrows</p>
+            <p>Attack Zero: Numpad 2</p>
+            <p>Attack One: Numpad 3</p>
+            <p>Attack Two: Numpad 5</p>
+            <p>Attack Three: Numpad 6</p>
+            <p>Start: Numpad Enter</p>
+
+            <u>Gamepad Controls</u>
+            <p>Move: D-Pad/Left-Joystick</p>
+            <p>Attack Zero: A</p>
+            <p>Attack One: B</p>
+            <p>Attack Two: X</p>
+            <p>Attack Three: Y</p>
+            <p>Start: Start</p>
+        </div>
+
+        </br>
+        <p style="font-size: 30px;">Click on a character to see their movesets!</p>
+        <button onclick="DisplayCharacterMoveset('Universal')" style="background:none; border: none;"><img src="WebsiteContents/CharacterIcons/universal.gif" width="100"></button>
+        <button onclick="DisplayCharacterMoveset('Pretty Bomber')" style="background:none; border: none;"><img src="WebsiteContents/CharacterIcons/pretty_bomber.gif" width="100"></button>
+        <button onclick="DisplayCharacterMoveset('Regulus')" style="background:none; border: none;"><img src="WebsiteContents/CharacterIcons/regulus.gif" width="100"></button>
+        <button onclick="DisplayCharacterMoveset('Shirobon')" style="background:none; border: none;"><img src="WebsiteContents/CharacterIcons/shirobon.gif" width="100"></button>
+        <button onclick="DisplayCharacterMoveset('Kurobon')" style="background:none; border: none;"><img src="WebsiteContents/CharacterIcons/kurobon.gif" width="100"></button>
+
+        <div class="inputGuideBox">
+            <h2 id="characterNameDisplay"></h2>
+            <h3 id="facingDirection"></h3>
+            <p id="moveList"></p>
+        </div>
+    </div>
+
+
+    <script>
+        class Character
+        {
+            combos = [];
+            isReleased = true;
+
+            constructor(s_name)
+            {
+                this.s_name = s_name;
+                characters.push(this);
+            }
+        }
+        var characters = []; // Stores all character instances.
+
+        class Combo
+        {
+            constructor(s_name, inputs = [], s_tip)
+            { 
+                this.s_name = s_name;
+                this.inputs = inputs;
+                
+                if(s_tip != null)
+                    this.s_tip = s_tip;
+            }
+        }
+
+        // Returns character data by the character's name.
+        function FindCharacterByName(s_characterName)
+        {
+            for(let i = 0; i < characters.length; i++)
+            {
+                if(characters[i].s_name == s_characterName)
+                    return characters[i];
+            }
+            
+            return null;
+        }
+
+        const characterNameDisplay = document.getElementById("characterNameDisplay");
+        const facingDirection = document.getElementById("facingDirection");
+        const movesetList = document.getElementById("moveList");
+
+        function DisplayCharacterMoveset(s_characterName)
+        {
+            characterData = FindCharacterByName(s_characterName);
+
+            characterNameDisplay.innerHTML = characterData.s_name + "</br>";
+            facingDirection.innerHTML = "Assumed facing right </br>";
+            movesetList.innerHTML = "";
+
+            if(characterData.isReleased)
+            {
+                for(let i = 0; i < characterData.combos.length; i++)
+                {
+                    movesetList.innerHTML += characterData.combos[i].s_name + "</br>";
+                    if(characterData.combos[i].s_tip != null)
+                        movesetList.innerHTML += "(" + characterData.combos[i].s_tip + ")" + "</br>"
+
+                    for(let e = 0; e < characterData.combos[i].inputs.length; e++)
+                    {
+                        inputPath = "WebsiteContents/Inputs/" + characterData.combos[i].inputs[e] + ".png";
+                        movesetList.innerHTML += "<img src='" + inputPath + "'width='60' alt='" + inputPath + "'>";
+                    }
+
+                    movesetList.innerHTML += "</br>";
+                    movesetList.innerHTML += "<img src='WebsiteContents/divider.png' width='650' alt='Moveset divider'>";
+                    movesetList.innerHTML += "</br>";
+                }
+            }
+            else
+                movesetList.innerHTML = "Yet to be playable in future update!";
+        }
+
+        // Universal (Moves for all characters.)
+        var universal = new Character("Universal");
+        universal.combos.push(new Combo("Left Punch", ["2"]));
+        universal.combos.push(new Combo("Right Punch", ["3"]));
+        universal.combos.push(new Combo("Left Kick", ["0"]));
+        universal.combos.push(new Combo("Right Kick", ["1"]));
+        universal.combos.push(new Combo("Throw", ["13"]));
+        universal.combos.push(new Combo("Left Uppercut", ["fd", "2"]));
+        universal.combos.push(new Combo("Right Uppercut", ["fd", "3"]));
+        universal.combos.push(new Combo("Quickstand", ["u"], "While laying"));
+        universal.combos.push(new Combo("Wake-Up Kick", ["1"], "While laying"));
+        universal.combos.push(new Combo("Wake-Up Low Kick", ["0"], "While laying"));
+        universal.combos.push(new Combo("Spring Kick", ["b", "01"], "While laying"));
+        universal.combos.push(new Combo("Rising Cross Chop", ["23"], "While rolling forward"));
+
+        // Defining playable characters.
+        var shirobon = new Character("Shirobon");
+        shirobon.combos.push(new Combo("Two-jab to roundhouse", ["2", "3", "1"]));
+        shirobon.combos.push(new Combo("Go for Broke", ["2", "3", "2", "3"]));
+        shirobon.combos.push(new Combo("Slayer", ["2", "3", "3", "3"]));
+        shirobon.combos.push(new Combo("Launching Left Fist", ["f", "d", "fd", "n", "2"]));
+        shirobon.combos.push(new Combo("Launching Right Fist", ["f", "d", "fd", "n", "3"]));
+        shirobon.combos.push(new Combo("Cast bomb", ["d", "23"]));
+        shirobon.combos.push(new Combo("Quick-Cast bomb", ["f", "f", "n", "3"]));
+        shirobon.combos.push(new Combo("Drop bomb", ["d", "3"], "While Welding Bomb"));
+        shirobon.combos.push(new Combo("Throw bomb", ["b", "03"], "While Welding Bomb"));
+
+        var kurobon = new Character("Kurobon");
+        kurobon.combos.push(new Combo("Two-jab to roundhouse", ["2", "3", "1"]));
+        kurobon.combos.push(new Combo("Go for Broke", ["2", "3", "2", "3"]));
+        kurobon.combos.push(new Combo("Slayer", ["2", "3", "3", "3"]));
+        kurobon.combos.push(new Combo("Scorching Left Fist", ["f", "d", "fd", "n", "2"]));
+        kurobon.combos.push(new Combo("Scorching Right Fist", ["f", "d", "fd", "n", "3"]));
+        kurobon.combos.push(new Combo("Cast bomb", ["d", "23"]));
+        kurobon.combos.push(new Combo("Drop bomb", ["d", "3"], "While Welding Bomb"));
+        kurobon.combos.push(new Combo("Throw bomb", ["b", "03"], "While Welding Bomb"));
+
+        var regulus = new Character("Regulus");
+        regulus.isReleased = true;
+        regulus.combos.push(new Combo("Two-jab to side-kick", ["3", "2", "0"]));
+        regulus.combos.push(new Combo("Cor Leonis", ["2", "3", "2", "3"]));
+        regulus.combos.push(new Combo("Rising Uppercut", ["f", "d", "fd", "n", "3"]));
+        regulus.combos.push(new Combo("Nightmare", ["b", "12"]));
+
+        var prettyBomber = new Character("Pretty Bomber");
+        prettyBomber.isReleased = true;
+        prettyBomber.combos.push(new Combo("Two-jab to roundhouse", ["2", "3", "1"]));
+        prettyBomber.combos.push(new Combo("Double-Boot", ["fd", "0", "0"]));
+        prettyBomber.combos.push(new Combo("Two-jab to Double-Boot", ["2", "3", "0", "0", "3"]));
+        prettyBomber.combos.push(new Combo("Drop bomb", ["d", "3"], "While Welding Bomb"));
+        prettyBomber.combos.push(new Combo("Big Boot", ["d", "bd", "1"]));
+        prettyBomber.combos.push(new Combo("Flawless Ballerina", ["b", "0", "0", "0", "0", "0"]));
+        prettyBomber.combos.push(new Combo("Booming Ballerina", ["b", "0", "0", "3"]));
+        prettyBomber.combos.push(new Combo("Two-jab to Booming Ballerina", ["3", "2", "0", "0", "3"]));
+    </script>
+</html>
